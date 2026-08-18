@@ -9,8 +9,13 @@
 <!-- ============================================================
      STYLES
      ============================================================ -->
-     
 <style>
+/* ============================================================
+   JESUS-HAUS LOBPREIS — STYLESHEET
+   Design language: warm, breathing, hand-set.
+   Signature motif: concentric "sound-wave" arcs (voice / praise)
+   used behind each hero and as quiet section dividers.
+   ============================================================ */
 
 /* ---------- Fonts ---------- */
      
@@ -20,9 +25,9 @@
 :root {
   --cream: #FAF8F3;
   --warm: #FFFEFB;
-  --sage: #c4aee8;
-  --sage-light: #E0D5F2;
-  --sage-pale: #F9F2FC;
+  --sage: #96BEA0;
+  --sage-light: #C8DFD0;
+  --sage-pale: #EAF3EE;
   --gold: #C9913A;
   --gold-light: #F0D9B5;
   --gold-pale: #FBF2E3;
@@ -542,7 +547,7 @@ section { position: relative; }
   color: var(--warm);
   margin-bottom: 1rem;
 }
-.timeline-step:nth-child(1) .step-num { background: var(--gold); }
+.timeline-step:nth-child(1) .step-num { background: var(--sage); }
 .timeline-step:nth-child(2) .step-num { background: var(--sky); }
 .timeline-step:nth-child(3) .step-num { background: var(--lavender); }
 .timeline-step:nth-child(4) .step-num { background: var(--rose); }
@@ -580,7 +585,7 @@ section { position: relative; }
   max-width: 780px;
   margin-left: auto;
   margin-right: auto;
-  background: var(--sage-light);
+  background: var(--sage-pale);
   border-radius: 22px;
   padding: 2.2rem 2.4rem;
 }
@@ -588,7 +593,7 @@ section { position: relative; }
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 0.9rem;
-  color: var(--ink-mid);
+  color: var(--sage);
 }
 .timeline-summary ul { display: grid; gap: 0.65rem; }
 .timeline-summary li {
@@ -598,7 +603,7 @@ section { position: relative; }
   color: var(--ink-mid);
   line-height: 1.6;
 }
-.timeline-summary li svg { width: 18px; height: 18px; color: var(--ink-soft); flex-shrink: 0; margin-top: 3px; }
+.timeline-summary li svg { width: 18px; height: 18px; color: var(--sage); flex-shrink: 0; margin-top: 3px; }
 
 .link-callout {
   margin-top: 0.9rem;
@@ -627,7 +632,7 @@ section { position: relative; }
   transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
 .faq-item[aria-expanded="true"] {
-  border-color: var(--sage-pale);
+  border-color: var(--sage-light);
   box-shadow: 0 18px 32px -22px var(--shadow);
 }
 .faq-question {
@@ -1382,4 +1387,3 @@ function initScrollSpy() {
 </script>
 </body>
 </html>
-
