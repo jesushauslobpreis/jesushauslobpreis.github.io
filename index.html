@@ -173,6 +173,8 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 12px); }
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .brand .brand-mark {
   display: inline-block;
@@ -235,7 +237,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 12px); }
 .nav-toggle[aria-expanded="true"] span::before { transform: translateY(7px) rotate(45deg); }
 .nav-toggle[aria-expanded="true"] span::after { transform: translateY(-7px) rotate(-45deg); }
 
-@media (max-width: 860px) {
+@media (max-width: 1080px) {
   .nav-toggle { display: block; }
   .nav-links {
     position: fixed;
