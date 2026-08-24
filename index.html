@@ -1459,36 +1459,6 @@ function initNavToggle() {
 
   prevBtn.addEventListener('click', () => prev(true));
   nextBtn.addEventListener('click', () => next(true));
-
-    // Touch swipe support
-  const carousel = document.getElementById('gallery-carousel');
-  let touchStartX = 0;
-  let touchCurrentX = 0;
-  let isSwiping = false;
-
-  carousel.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    isSwiping = true;
-  }, { passive: true });
-
-  carousel.addEventListener('touchmove', (e) => {
-    if (!isSwiping) return;
-    touchCurrentX = e.touches[0].clientX;
-  }, { passive: true });
-
-  carousel.addEventListener('touchend', () => {
-    if (!isSwiping) return;
-    const delta = touchCurrentX - touchStartX;
-    const threshold = 40; // minimum px to count as a swipe
-    if (Math.abs(delta) > threshold) {
-      if (delta < 0) next(true); else prev(true);
-    }
-    isSwiping = false;
-  });
-
-  update();
-  restart();
-})();
      
 /* ---------- Scroll reveal ---------- */
 function initScrollReveal() {
