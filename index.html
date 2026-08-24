@@ -405,6 +405,76 @@ section { position: relative; }
 .divider-before-leadership { margin-bottom: 2.5rem; }
 .divider-after-leadership { margin-top: 2.5rem; }
 
+.gallery-carousel {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 24px 40px -20px var(--shadow);
+  aspect-ratio: 16 / 9;
+  max-width: 800px;
+  margin: 0 auto;
+  touch-action: pan-y;
+}
+.gallery-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s var(--ease);
+}
+.gallery-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+}
+.gallery-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.85);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 20px -10px var(--shadow);
+  transition: background 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.gallery-arrow:hover { background: var(--gold); color: #fff; }
+.gallery-arrow svg { width: 20px; height: 20px; }
+.gallery-prev { left: 16px; }
+.gallery-next { right: 16px; }
+.gallery-dots {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+.gallery-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.6);
+  padding: 0;
+  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.gallery-dot.is-active { background: var(--gold); transform: scale(1.2); }
+
+@media (max-width: 640px) {
+  .gallery-arrow { width: 36px; height: 36px; }
+  .gallery-carousel { border-radius: 20px; }
+}
+
 /* ============================================================
    Core Values
    ============================================================ */
@@ -1119,6 +1189,41 @@ Diese findet halbjährlich (im Sommer und Winter) im Anschluss an die Auswertung
     <svg viewBox="0 0 120 22" fill="none"><path d="M2 11c8 0 8-9 16-9s8 9 16 9 8-9 16-9 8 9 16 9 8-9 16-9 8 9 16 9 8-9 16-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </div>
 
+ <!-- ============================================================
+     PHOTO GALLERY — AUTO-ROTATING CAROUSEL
+     ============================================================ -->
+<section class="section-pad bg-cream" id="gallery">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Impressionen</span>
+      <h2>Momente aus unserem Team</h2>
+      <p></p>
+    </div>
+
+    <div class="gallery-carousel reveal" id="gallery-carousel">
+      <div class="gallery-track" id="gallery-track">
+        <div class="gallery-slide"><img src="images/join5.jpg" alt="Foto"></div>
+        <div class="gallery-slide"><img src="images/join4.jpg" alt="Foto"></div>
+        <div class="gallery-slide"><img src="images/join3.jpg" alt="Foto"></div>
+        <div class="gallery-slide"><img src="images/join2.jpg" alt="Foto"></div>
+      </div>
+
+      <button class="gallery-arrow gallery-prev" id="gallery-prev" aria-label="Vorheriges Bild">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button class="gallery-arrow gallery-next" id="gallery-next" aria-label="Nächstes Bild">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+
+      <div class="gallery-dots" id="gallery-dots"></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true">
+  <svg viewBox="0 0 120 22" fill="none"><path d="M2 11c8 0 8-9 16-9s8 9 16 9 8-9 16-9 8 9 16 9 8-9 16-9 8 9 16 9 8-9 16-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+</div>
+
   <!-- ============================================================
        FAQ
        ============================================================ -->
@@ -1287,6 +1392,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTimelineSteps();
   initFaqAccordion();
   initScrollSpy();
+  initGalleryCarousel();
 });
 
 /* ---------- Footer year ---------- */
@@ -1314,6 +1420,76 @@ function initNavToggle() {
   });
 }
 
+/* ---------- Gallery carousel ---------- */
+(function () {
+  const track = document.getElementById('gallery-track');
+  if (!track) return;
+  const slides = Array.from(track.children);
+  const dotsWrap = document.getElementById('gallery-dots');
+  const prevBtn = document.getElementById('gallery-prev');
+  const nextBtn = document.getElementById('gallery-next');
+  const total = slides.length;
+  let index = 0;
+  let timer;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'gallery-dot';
+    dot.setAttribute('aria-label', `Bild ${i + 1} anzeigen`);
+    dot.addEventListener('click', () => goTo(i, true));
+    dotsWrap.appendChild(dot);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function update() {
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+  }
+  function goTo(i, manual) {
+    index = (i + total) % total;
+    update();
+    if (manual) restart();
+  }
+  function next(manual) { goTo(index + 1, manual); }
+  function prev(manual) { goTo(index - 1, manual); }
+  function restart() {
+    clearInterval(timer);
+    timer = setInterval(() => next(false), 5000);
+  }
+
+  prevBtn.addEventListener('click', () => prev(true));
+  nextBtn.addEventListener('click', () => next(true));
+
+    // Touch swipe support
+  const carousel = document.getElementById('gallery-carousel');
+  let touchStartX = 0;
+  let touchCurrentX = 0;
+  let isSwiping = false;
+
+  carousel.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    isSwiping = true;
+  }, { passive: true });
+
+  carousel.addEventListener('touchmove', (e) => {
+    if (!isSwiping) return;
+    touchCurrentX = e.touches[0].clientX;
+  }, { passive: true });
+
+  carousel.addEventListener('touchend', () => {
+    if (!isSwiping) return;
+    const delta = touchCurrentX - touchStartX;
+    const threshold = 40; // minimum px to count as a swipe
+    if (Math.abs(delta) > threshold) {
+      if (delta < 0) next(true); else prev(true);
+    }
+    isSwiping = false;
+  });
+
+  update();
+  restart();
+})();
+     
 /* ---------- Scroll reveal ---------- */
 function initScrollReveal() {
   const targets = document.querySelectorAll('.reveal, .reveal-stagger');
