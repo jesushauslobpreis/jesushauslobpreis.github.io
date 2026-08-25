@@ -224,12 +224,19 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 12px); }
   height: 40px;
   position: relative;
 }
-.nav-toggle span,
+.nav-toggle span {
+  content: '';
+  position: absolute;
+  left: 9px; right: 9px;
+  height: 2px;
+  background: var(--ink);
+  transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+}
 .nav-toggle span::before,
 .nav-toggle span::after {
   content: '';
   position: absolute;
-  left: 9px; right: 9px;
+  left: 0; right: 0;
   height: 2px;
   background: var(--ink);
   transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
